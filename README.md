@@ -12,6 +12,8 @@ VRM0 = UniVRM-0.104.1_4a9b.unitypackage
 VRM1 = VRM-0.104.1_4a9b.unitypackage (VRM0読み込み有効)  
 での読込結果です。
 
+※モデルは付属しません。モデルの権利は各モデルの作者に帰属します。
+
 VRM0正常  
 ![](doc/1.png)
 
