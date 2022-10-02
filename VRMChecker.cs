@@ -29,11 +29,11 @@ public class VRMChecker : MonoBehaviour
     {
         if (Model10)
         {
-            Model10.transform.position = new Vector3(-1, 0, 0);
+            Model10.transform.position = new Vector3(-1, (float)Math.Cos(Time.time*10)*0.05f, 0);
         }
         if (Model)
         {
-            Model.transform.position = new Vector3(1, 0, 0);
+            Model.transform.position = new Vector3(1, (float)Math.Cos(Time.time*10)* 0.05f, 0);
         }
     }
 
@@ -73,12 +73,14 @@ public class VRMChecker : MonoBehaviour
 
         if (File.Exists(path))
         {
+            VRM1_Text.text = "VRM1\nLoading...";
             vrmfilepath = path;
             byte[] VRMdataRaw = File.ReadAllBytes(path);
             LoadVRM10FromData(VRMdataRaw);
         }
         else
         {
+            VRM1_Text.text = "VRM1\nFile not found";
             Debug.LogError("File not found: " + path);
         }
     }
@@ -100,12 +102,13 @@ public class VRMChecker : MonoBehaviour
                 //Auto migration
                 UniVRM10.MigrationData mdata;
                 migratedGltfData = UniVRM10.Vrm10Data.Migrate(gltfData, out vrm, out mdata);
+                migrationMessage = mdata.Message;
                 if (vrm == null)
                 {
+                    VRM1_Text.text = "VRM1\nLoad Error: " + mdata.Message;
                     Debug.LogError(mdata.Message);
                     return;
                 }
-                migrationMessage = mdata.Message;
             }
 
             UniVRM10.Vrm10Importer vrmImporter = new UniVRM10.Vrm10Importer(vrm);
@@ -154,12 +157,14 @@ public class VRMChecker : MonoBehaviour
 
         if (File.Exists(path))
         {
+            VRM0_Text.text = "VRM0\nLoading...";
             vrmfilepath = path;
             byte[] VRMdataRaw = File.ReadAllBytes(path);
             LoadVRMFromData(VRMdataRaw);
         }
         else
         {
+            VRM0_Text.text = "VRM0\nFile not found";
             Debug.LogError("File not found: " + path);
         }
     }
