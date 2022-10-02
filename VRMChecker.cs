@@ -22,6 +22,7 @@ public class VRMChecker : MonoBehaviour
     void Start()
     {
         synchronizationContext = SynchronizationContext.Current;
+        Screen.SetResolution(1280, 768, false, 60);
     }
 
     void Update()
