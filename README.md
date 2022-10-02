@@ -1,4 +1,7 @@
 # EVRMChecker
+
+You can check the difference in appearance when reading your VRM file with UniVRM0 and VRM1 SDK, and test whether it can be read.
+
 VRMファイルが、
 
 + VRM0環境で読み込めるものか
