@@ -7,13 +7,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SFB;
+using VRM;
+using UniVRM10;
 
 public class VRMChecker : MonoBehaviour
 {
     public GameObject Model = null;
     public GameObject Model10 = null;
+    public bool ModelChenged = false;
+    public bool Model10Chenged = false;
     public Text VRM0_Text;
     public Text VRM1_Text;
+    public Text VRM0_Info;
+    public Text VRM1_Info;
     public string vrmfilepath;
     SynchronizationContext synchronizationContext;
 
@@ -30,10 +36,34 @@ public class VRMChecker : MonoBehaviour
         if (Model10)
         {
             Model10.transform.position = new Vector3(-1, (float)Math.Cos(Time.time*10)*0.05f, 0);
+
+            if (Model10Chenged)
+            {
+                Model10Chenged = false;
+                string expressionList = "ExpressionKeys\n";
+                foreach (var E in Model10.GetComponent<Vrm10Instance>().Runtime.Expression.ExpressionKeys)
+                {
+                    expressionList += E.ToString() + "\n";
+                }
+                Debug.Log(expressionList);
+                VRM1_Info.text = expressionList;
+            }
         }
         if (Model)
         {
             Model.transform.position = new Vector3(1, (float)Math.Cos(Time.time*10)* 0.05f, 0);
+
+            if (ModelChenged)
+            {
+                ModelChenged = false;
+                string blendList = "VRMBlendShapeProxy\n";
+                foreach (var E in Model.GetComponent<VRMBlendShapeProxy>().GetValues())
+                {
+                    blendList += E.Key.ToString() + "\n";
+                }
+                Debug.Log(blendList);
+                VRM0_Info.text = blendList;
+            }
         }
     }
 
@@ -74,6 +104,8 @@ public class VRMChecker : MonoBehaviour
         if (File.Exists(path))
         {
             VRM1_Text.text = "VRM1\nLoading...";
+            VRM1_Info.text = "";
+
             vrmfilepath = path;
             byte[] VRMdataRaw = File.ReadAllBytes(path);
             LoadVRM10FromData(VRMdataRaw);
@@ -132,6 +164,7 @@ public class VRMChecker : MonoBehaviour
                         VRM1_Text.text = "VRM1\nLoad OK("+ migrationMessage+ ")";
                         migratedGltfData.Dispose();
                     }
+                    Model10Chenged = true;
                 }
                 catch (Exception e)
                 {
@@ -158,6 +191,7 @@ public class VRMChecker : MonoBehaviour
         if (File.Exists(path))
         {
             VRM0_Text.text = "VRM0\nLoading...";
+            VRM0_Info.text = "";
             vrmfilepath = path;
             byte[] VRMdataRaw = File.ReadAllBytes(path);
             LoadVRMFromData(VRMdataRaw);
@@ -193,6 +227,7 @@ public class VRMChecker : MonoBehaviour
                 gltfInstance.ShowMeshes();
 
                 VRM0_Text.text = "VRM0\nLoad OK";
+                ModelChenged = true;
             }, null);
         }
         catch (Exception e)
